@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: finanza-db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: finanza
+    volumes:
+      - finanza_db_data:/var/lib/postgresql/data
+
+volumes:
+  finanza_db_data:
