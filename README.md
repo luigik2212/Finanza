@@ -67,6 +67,7 @@ Backend (`server/.env`):
 - `DATABASE_URL`: conexão Postgres
 - `JWT_SECRET`: segredo do JWT
 - `PORT`: porta do servidor (default 3000)
+- `SEED_DEMO_ON_START`: cria o usuário demo automaticamente quando não existe (default `true` fora de produção)
 
 Frontend (`client/.env`):
 
