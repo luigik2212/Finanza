@@ -11,6 +11,7 @@ import { categoryRoutes } from "./routes/categories";
 import { merchantRoutes } from "./routes/merchants";
 import { accountRoutes } from "./routes/accounts";
 import { reportRoutes } from "./routes/reports";
+import { seedDemoUser } from "./lib/demoSeed";
 
 const app = Fastify({ logger: true });
 
@@ -46,12 +47,25 @@ app.setNotFoundHandler((request, reply) => {
   reply.code(404).send({ message: "Not found" });
 });
 
-app
-  .listen({ port: env.PORT, host: "0.0.0.0" })
-  .then(() => {
+async function start() {
+  if (env.SEED_DEMO_ON_START) {
+    try {
+      const { created } = await seedDemoUser();
+      if (created) {
+        app.log.info("Demo user created (demo@demo.com / 123456).");
+      }
+    } catch (error) {
+      app.log.error({ error }, "Failed to seed demo user.");
+    }
+  }
+
+  try {
+    await app.listen({ port: env.PORT, host: "0.0.0.0" });
     app.log.info(`Server running on port ${env.PORT}`);
-  })
-  .catch((error) => {
+  } catch (error) {
     app.log.error(error);
     process.exit(1);
-  });
+  }
+}
+
+start();
